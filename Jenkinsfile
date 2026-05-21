@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     triggers {
-        cron('H/2 * * * *')
+        pollSCM('H/2 * * * *')
     }
 
     stages {
@@ -25,7 +25,7 @@ pipeline {
             }
         }
 
-        stage('Build (Compile Check)') {
+        stage('Build - Compile Check') {
             steps {
                 echo 'Verificando sintaxe do código...'
                 sh '''
@@ -40,12 +40,12 @@ pipeline {
                 echo 'Executando testes com cobertura...'
                 sh '''
                     . venv/bin/activate
-                    pytest -v --junitxml=test-results.xml --cov=src --cov-report=xml --cov-report=html
+                    pytest -v \
+                        --junitxml=test-results.xml \
+                        --cov=src \
+                        --cov-report=xml \
+                        --cov-report=html
                 '''
-                pytest --cov=src \
-                --cov-report=xml \
-                --cov-report=html
-
             }
         }
     }
@@ -53,19 +53,25 @@ pipeline {
     post {
         always {
             echo 'Publicando resultados dos testes...'
-            junit allowEmptyResults: true, testResults: 'test-results.xml'
-            recordCoverage(tools: [[
-                parser: 'COBERTURA',
-                pattern: 'coverage.xml']]
-            )
 
+            junit allowEmptyResults: true, testResults: 'test-results.xml'
+
+            recordCoverage(
+                tools: [[
+                    parser: 'COBERTURA',
+                    pattern: 'coverage.xml'
+                ]]
+            )
         }
+
         success {
             echo 'Pipeline executado com sucesso!'
         }
+
         failure {
             echo 'Pipeline falhou!'
         }
+
         unstable {
             echo 'Build instável - testes falharam!'
         }
