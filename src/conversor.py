@@ -1,6 +1,6 @@
 def fahrenheit_para_celsius(fahrenheit):
     """Converte uma temperatura de Fahrenheit para Celsius."""
-    celsius = (fahrenheit - 32) * 5 / 8
+    celsius = (fahrenheit - 32) * 5 / 9
     return round(celsius, 2)
 
 
