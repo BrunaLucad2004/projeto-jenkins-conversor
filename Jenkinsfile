@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     triggers {
         cron('H/2 * * * *')
     }
@@ -42,6 +42,10 @@ pipeline {
                     . venv/bin/activate
                     pytest -v --junitxml=test-results.xml --cov=src --cov-report=xml --cov-report=html
                 '''
+                pytest --cov=src \
+                --cov-report=xml \
+                --cov-report=html
+
             }
         }
     }
@@ -50,6 +54,11 @@ pipeline {
         always {
             echo 'Publicando resultados dos testes...'
             junit allowEmptyResults: true, testResults: 'test-results.xml'
+            recordCoverage(tools: [[
+                parser: 'COBERTURA',
+                pattern: 'coverage.xml']]
+            )
+
         }
         success {
             echo 'Pipeline executado com sucesso!'
