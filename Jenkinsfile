@@ -40,7 +40,7 @@ pipeline {
                 echo 'Executando testes com cobertura...'
                 sh '''
                     . venv/bin/activate
-                     pytest -v/
+                     python3 -m pytest -v/
                      --junitxml=test-results.xml /--cov=src /--cov-report=xml /--cov-report=html
                 '''
             }
