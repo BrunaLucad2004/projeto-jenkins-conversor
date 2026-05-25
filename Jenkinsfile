@@ -37,6 +37,7 @@ pipeline {
                 echo 'Executando testes com cobertura...'
                 sh '''
                     . venv/bin/activate
+                     pytest -v
                 '''
             }
         }
