@@ -1,9 +1,6 @@
 pipeline {
     agent any
 
-    triggers {
-        pollSCM('H/2 * * * *')
-    }
 
     stages {
         stage('Checkout') {
@@ -40,11 +37,6 @@ pipeline {
                 echo 'Executando testes com cobertura...'
                 sh '''
                     . venv/bin/activate
-                    pytest -v \
-                        --junitxml=test-results.xml \
-                        --cov=src \
-                        --cov-report=xml \
-                        --cov-report=html
                 '''
             }
         }
@@ -56,12 +48,6 @@ pipeline {
 
             junit allowEmptyResults: true, testResults: 'test-results.xml'
 
-            recordCoverage(
-                tools: [[
-                    parser: 'COBERTURA',
-                    pattern: 'coverage.xml'
-                ]]
-            )
         }
 
         success {
