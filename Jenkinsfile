@@ -41,7 +41,7 @@ pipeline {
                 sh '''
                     . venv/bin/activate
                      pytest -v/
-                     --junitxml=test-results.xml \--cov=src \--cov-report=xml \--cov-report=html
+                     --junitxml=test-results.xml /--cov=src /--cov-report=xml /--cov-report=html
                 '''
             }
         }
