@@ -40,7 +40,8 @@ pipeline {
                 echo 'Executando testes com cobertura...'
                 sh '''
                     . venv/bin/activate
-                     pytest -v
+                     pytest -v/
+                     --junitxml=test-results.xml \--cov=src \--cov-report=xml \--cov-report=html
                 '''
             }
         }
@@ -51,6 +52,10 @@ pipeline {
             echo 'Publicando resultados dos testes...'
 
             junit allowEmptyResults: true, testResults: 'test-results.xml'
+
+            recordCoverage(tools: [[
+                parser: 'COBERTURA',
+                pattern: 'coverage.xml']])
 
         }
 
